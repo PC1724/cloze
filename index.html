@@ -70,40 +70,33 @@ function abbreviateText() {
     const text = document.getElementById("input").value;
 
     const result = text.replace(/\{(.*?)\}/gs, (_, content) => {
-        const initials = content
-            .match(/\b[A-Za-z]+\b/g)
-            ?.map(word => word[0].toUpperCase())
-            .join(' ') || '';
+        const trimmed = content.trim();
 
-        return initials;
+        // 1️⃣ All uppercase (single or multiple words) → keep as-is
+        if (/^[A-Z\s]+$/.test(trimmed)) {
+            return trimmed;
+        }
+
+        // Extract English words
+        const words = trimmed.match(/\b[A-Za-z]+\b/g);
+        if (!words || words.length === 0) return '';
+
+        // 2️⃣ Single normal word → first letter capital
+        if (words.length === 1) {
+            return words[0][0].toUpperCase();
+        }
+
+        // 3️⃣ Multiple words → initials
+        return words.map(w => w[0].toUpperCase()).join(' ');
     });
 
     document.getElementById("output").value = result;
 }
-
-// TAB = 4 spaces (input only)
-function enableTabAsSpaces(textareaId, spaces = 4) {
-    const textarea = document.getElementById(textareaId);
-    const spaceString = ' '.repeat(spaces);
-
-    textarea.addEventListener('keydown', function(e) {
-        if (e.key === 'Tab') {
-            e.preventDefault();
-            const start = this.selectionStart;
-            const end = this.selectionEnd;
-            this.value =
-                this.value.substring(0, start) +
-                spaceString +
-                this.value.substring(end);
-            this.selectionStart = this.selectionEnd = start + spaces;
-        }
-    });
-}
-
-enableTabAsSpaces('input', 4);
 </script>
+
 
 
 </body>
 </html>
+
 
