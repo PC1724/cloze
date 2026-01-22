@@ -58,7 +58,7 @@ button:hover {
 <body>
 
 <h3>Input Text</h3>
-<textarea id="input" placeholder="Paste text with {{c1::marked English words}}"></textarea>
+<textarea id="input" placeholder="Paste text with {marked English words}"></textarea>
 
 <button onclick="abbreviateText()">Abbreviate</button>
 
@@ -69,13 +69,14 @@ button:hover {
 function abbreviateText() {
     const text = document.getElementById("input").value;
 
-    const result = text.replace(/\{\{c1::(.*?)\}\}/gs, (_, content) => {
-        return content.replace(/\b[A-Za-z]+\b/g, word => {
+    const result = text.replace(/\{(.*?)\}/gs, (_, content) => {
+        const abbreviated = content.replace(/\b[A-Za-z]+\b/g, word => {
             // If already uppercase, keep as-is
             if (word === word.toUpperCase()) return word;
             // Otherwise, first letter capital
             return word[0].toUpperCase();
         });
+        return `{${abbreviated}}`;
     });
 
     document.getElementById("output").value = result;
