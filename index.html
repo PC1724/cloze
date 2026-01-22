@@ -70,13 +70,12 @@ function abbreviateText() {
     const text = document.getElementById("input").value;
 
     const result = text.replace(/\{(.*?)\}/gs, (_, content) => {
-        const abbreviated = content.replace(/\b[A-Za-z]+\b/g, word => {
-            // If already uppercase, keep as-is
-            if (word === word.toUpperCase()) return word;
-            // Otherwise, first letter capital
-            return word[0].toUpperCase();
-        });
-        return `{${abbreviated}}`;
+        const initials = content
+            .match(/\b[A-Za-z]+\b/g)
+            ?.map(word => word[0].toUpperCase())
+            .join(' ') || '';
+
+        return initials;
     });
 
     document.getElementById("output").value = result;
@@ -104,5 +103,7 @@ function enableTabAsSpaces(textareaId, spaces = 4) {
 enableTabAsSpaces('input', 4);
 </script>
 
+
 </body>
 </html>
+
